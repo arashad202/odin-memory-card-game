@@ -1,10 +1,11 @@
 import Scoreboard from "./components/Scoreboard";
+import CardGrid from "./components/CardGrid";
 // import { useState } from "react"
 
 function App() {
   let currentScore;
   let bestScore;
-  let cards;
+  let cards = [];
   let handleCardClick;
 
 
