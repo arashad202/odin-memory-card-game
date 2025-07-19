@@ -11,49 +11,45 @@ function App() {
   const [bestScore, setBestScore] = useState(0);
 
   useEffect(() => {
-    const fetchGifs = async () => {
-      try {
+  const fetchGifs = async () => {
+    const res = await fetch(
+      `https://api.giphy.com/v1/gifs/trending?api_key=${API_KEY}&limit=12`
+    );
+    const data = await res.json();
+    const formatted = data.data.map((gif) => ({
+      id: gif.id,
+      url: gif.images.fixed_height.url,
+      title: gif.title,
+    }));
+    setCards(shuffleCards(formatted));
+  };
 
-        const res = await fetch(
-          `https://api.giphy.com/v1/gifs/trending?api_key=${API_KEY}&limit=12`
-        )
-        const data = await res.json();
-
-        const formatted = data.data.map((gif) => ({
-          id: gif.id,
-          url: gif.images.fixed_height.url,
-          title: gif.title,
-        }));
-
-        setCards(shuffleCards(formatted));
-
-      } catch (err)  {
-        console.log(err);
-      }
-
-    }
-    
-    fetchGifs();
-  }, []);
+  fetchGifs();
+}, []);
 
   const shuffleCards = (cardsArray) => {
-    return [...cardsArray].sort(() => Math.round() - 0.5);
+  const newArray = [...cardsArray];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
+  return newArray;
+};
 
   const handleCardClick = (id) => {
-    if (clickedCards.includes(id)) {
-      setCurrentScore(0);
-      setClickedCards([]);
-    } else {
-      const newScore = currentScore+1;
-      setCurrentScore(newScore);
-      if (newScore > bestScore) {
-        setBestScore(newScore);
-      }
-      setClickedCards([...clickedCards, id])
+  if (clickedCards.includes(id)) {
+    setCurrentScore(0);
+    setClickedCards([]);
+  } else {
+    const newScore = currentScore + 1;
+    setCurrentScore(newScore);
+    if (newScore > bestScore) {
+      setBestScore(newScore);
     }
-    setCards(shuffleCards(cards));
+    setClickedCards([...clickedCards, id]);
   }
+  setCards((prevCards) => shuffleCards(prevCards));
+};
 
 
 
