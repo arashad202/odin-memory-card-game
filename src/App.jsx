@@ -31,14 +31,29 @@ function App() {
         console.log(err);
       }
 
-      fetchGifs();
     }
+    
+    fetchGifs();
   }, []);
 
   const shuffleCards = (cardsArray) => {
     return [...cardsArray].sort(() => Math.round() - 0.5);
   }
 
+  const handleCardClick = (id) => {
+    if (clickedCards.includes(id)) {
+      setCurrentScore(0);
+      setClickedCards([]);
+    } else {
+      const newScore = currentScore+1;
+      setCurrentScore(newScore);
+      if (newScore > bestScore) {
+        setBestScore(newScore);
+      }
+      setClickedCards([...clickedCards, id])
+    }
+    setCards(shuffleCards(cards));
+  }
 
 
 
